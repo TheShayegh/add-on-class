@@ -1,0 +1,1 @@
+from .abstract_object_decorator import AOD
