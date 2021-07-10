@@ -58,3 +58,12 @@ class CRI(ABC):
             raise Exception("The requirement has already been met.")
         if self.__auto_construct:
             self.integrate_requirements(ignore_requirements_meeting_error=True)
+
+
+
+def construction_required(function):
+    def wrapper(self, **args):
+        if not self.is_constructed:
+            raise Exception("The object is not constructed yet!")
+        return function(self, **args)
+    return wrapper
