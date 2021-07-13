@@ -3,7 +3,7 @@ class AOD:
         self.obj = obj
 
     def __getattribute__(self, attribute):
-        if attribute in ['__dict__','__class__','obj'] :
+        if attribute in ['__dict__','__class__','obj','__getattribute__'] :
             return object.__getattribute__(self, attribute)
         if attribute in self.__class__.__dict__:
             return object.__getattribute__(self, attribute)

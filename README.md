@@ -1,83 +1,7 @@
-# Abstract Design Patterns Package
-
-This package, with the aim of accelerating and facilitating the use of some design patterns, offers abstract classes that by inheriting other classes from them, you can more easily achieve the desired design patterns. These classes are implemented to be inherited alongside other classes.
-
-
-
-## Construction Requirements Integrator
-
-With the help of this module, classes can be inherited that are built and configured after their needs are met (instead of being launched immediately after creation).
-You can see an example of this application below:
-
-```python
-from construction_requirements_integrator import CRI, construction_required
-from random import random
-
-class XProvider:
-    def __init__(self):
-        self.x = int((random()*10))
-
-    def provide_for(self, obj):
-        obj.meet_requirement('x', self.x)
-
-class YProvider:
-    def __init__(self):
-        self.y = int((random()*5))
-
-    def provide_for(self, obj):
-        obj.meet_requirement('y', self.y)
-
-class Example(CRI):
-    def __init__(self, x=None, y=None, z=None):
-        CRI.__init__(self, x=x, y=y, z=z)
-
-    def __construct__(self, x, y, z):
-        self.x = x
-        self.y = y
-        self.z = z
-        self.volume = x*y*z
-
-    def get_construction_status(self):
-        return self.is_constructed
-
-    @construction_required
-    def get_volume(self):
-        return self.volume
-
-example1 = Example(z=2)
-XProvider().provide_for(example1)
-YProvider().provide_for(example1)
-print(example1.get_construction_status())
-# >>> True
-print(example1.get_volume())
-# >>> 24
-print(example1.x, example1.y, example1.z)
-# >>> 6 2 2
-
-example2 = Example(z=2)
-print(example2.get_construction_status())
-# >>> False
-print(example2.get_volume())
-# >>> Exception: The object is not constructed yet!
-```
-
-* Use `construction_required` annotation to avoid running a function before completion of the construction.
-
-When calling the `__init__` function from the `CRI` class, you can input settings:
-
-* `overwrite_requirement (default: False)`: If true, if one entry is entered multiple times, the previous values will be ignored and the new value replaced.
-* `ignore_resetting_error (default: False)`: If `overwrite_requirement` is not true, if one entry is entered multiple times, the object raises an error. This error will not be published if `ignore_resetting_error` is true.
-* `auto_construct (default: True)`: If true, the class starts to build, As soon as the class requirements are met. If false, You must call `integrate_requirements` to build the class.
-* `purge_after_construction (default: True)`: The class does not need the values collected for the requirements after completing the build process (unless it is stored again during the construction process). Therefore, after completing this process, it will delete them.
-You can prevent this by setting `purge_after_construction` to `False`.
-* `reconstruct (default: False)`: If true, allows the class to be reconstructed with new values.
-
-
-
-## Abstract Object Decorator
+# Abstract Object Decorator Package
 
 With the help of this module, you can implement decorators careless about things you don't want to change.
-You can see an example of this application below:
+You can see an example of this application below.
 
 ```python
 from abstract_object_decorator import AOD
@@ -98,7 +22,7 @@ class Child(Parent):
     def child_functionality(self):
         return 20
 
-class FirstDecorator(Parent, AOD):
+class FirstDecorator(AOD, Parent):
     def __init__(self, obj):
         AOD.__init__(self, obj)
         self.first_decorator_property = 3
@@ -109,7 +33,7 @@ class FirstDecorator(Parent, AOD):
     def child_functionality(self):
         return self.obj.child_functionality()*2
 
-class SecondDecorator(Parent, AOD):
+class SecondDecorator(AOD, Parent):
     def __init__(self, obj):
         AOD.__init__(self, obj)
         self.child_property = 12
@@ -135,7 +59,13 @@ print(issubclass(type(decorated), Parent))
 # >>> True
 ```
 
+NOTE: 
 
+* ALWAYS put `AOD` as the first base class.
+* ALWAYS call `AOD.__init__` as the first line of class initializer.
+* NEVER call any other base class initializer.
+* Use `self.obj` to access the core object of the decorator.
+* EVERY getter or setter will be redirected to the object.
 
 ## Installation
-Package is avalable on [PyPI](https://test.pypi.org/project/abstract-design-patterns/).
+```pip install abstract-object-decorator```

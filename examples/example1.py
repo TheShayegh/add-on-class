@@ -16,7 +16,7 @@ class Child(Parent):
     def child_functionality(self):
         return 20
 
-class FirstDecorator(Parent, AOD):
+class FirstDecorator(AOD, Parent):
     def __init__(self, obj):
         AOD.__init__(self, obj)
         self.first_decorator_property = 3
@@ -27,7 +27,7 @@ class FirstDecorator(Parent, AOD):
     def child_functionality(self):
         return self.obj.child_functionality()*2
 
-class SecondDecorator(Parent, AOD):
+class SecondDecorator(AOD, Parent):
     def __init__(self, obj):
         AOD.__init__(self, obj)
         self.child_property = 12
