@@ -25,7 +25,7 @@ class FirstDecorator(AOD, Parent):
         return 30
 
     def child_functionality(self):
-        return self.obj.child_functionality()*2
+        return self.core.child_functionality()*2
 
 class SecondDecorator(AOD, Parent):
     def __init__(self, obj):
@@ -33,7 +33,7 @@ class SecondDecorator(AOD, Parent):
         self.child_property = 12
 
     def child_functionality(self):
-        return self.obj.child_functionality()*3
+        return self.core.child_functionality()*3
 
 
 decorated = SecondDecorator(FirstDecorator(Child()))
