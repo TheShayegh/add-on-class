@@ -116,5 +116,7 @@ print(E(D(B)).__name__)
 # >>> BCoveredByDCoveredByE
 ```
 
+* NOTE: AAD can not be added to a function that receives *args or **kwargs as initialization input.
+
 ## Installation
 ```pip install abstract-additive-class```
