@@ -1,38 +1,39 @@
-class CoreOfDecorator:
-    def __init__(self, obj):
-        self.obj = obj
-    
-    def __getattribute__(self, attribute):
-        if attribute in ['obj','__getattribute__'] :
-            return object.__getattribute__(self, attribute)
-        return self.obj.__class__.old__getattribute__(self.obj, attribute)
-        
+import inspect
 
 class AOD:
-    def __init__(self, obj):
-        self.obj = obj
-        self.obj.__class__.old__getattribute__ = self.obj.__class__.__getattribute__
-        self.core = CoreOfDecorator(obj)
-        self.obj.decorator_refrence = self
-        setattr(obj.__class__, '__getattribute__', AOD.__new_obj_cls__getattribute)
+    def __new__(decore_cls, core_cls):
+        name = core_cls.__name__+"DecoratedBy"+decore_cls.__name__
+        
+        def init(self, *args, **kwargs):
+            pre_init_needs = inspect.signature(decore_cls.__pre_init__).parameters
+            pre_init_args = [a for a in args if a in pre_init_needs]
+            pre_init_kwargs = {k:a for k,a in kwargs.items() if k in pre_init_needs}
+            decore_cls.__pre_init__(self, *pre_init_args, **pre_init_kwargs)
+            
+            init_needs = inspect.signature(core_cls.__init__).parameters
+            init_args = [a for a in args if a in pre_init_needs]
+            init_kwargs = {k:a for k,a in kwargs.items() if k in pre_init_needs}
+            core_cls.__init__(self, *init_args, **init_kwargs)
+            
+            post_init_needs = inspect.signature(decore_cls.__post_init__).parameters
+            post_init_args = [a for a in args if a in post_init_needs]
+            post_init_kwargs = {k:a for k,a in kwargs.items() if k in post_init_needs}
+            decore_cls.__post_init__(self, *post_init_args, **post_init_kwargs)
+            
+            setattr(self, f'_{decore_cls.__name__}__core', core_cls)
+            
+        members = dict(decore_cls.__dict__)
+        members['__init__'] = init
 
-    def __new_obj_cls__getattribute(self, attribute):
-        if attribute in ['__dict__','__class__'] :
-            return object.__getattribute__(self, attribute)
-        if 'decorator_refrence' in self.__dict__:
-            return AOD.__getattribute__(object.__getattribute__(self, 'decorator_refrence'), attribute)
-        return self.__class__.old__getattribute__(self, attribute)
-
-    def __getattribute__(self, attribute):
-        if attribute in ['__dict__','__class__','obj','__getattribute__','core'] :
-            return object.__getattribute__(self, attribute)
-        if attribute in self.__class__.__dict__:
-            return object.__getattribute__(self, attribute)
-        if attribute in self.__dict__:
-            return object.__getattribute__(self, attribute)
-        return getattr(self.core, attribute)
-
-    def __setattr__(self, attribute, value):
-        if attribute in ['obj','core'] :
-            return object.__setattr__(self, attribute, value)
-        return self.obj.__setattr__(attribute, value)
+        DecoratedCls = type(
+            name,
+            (core_cls,),
+            members
+        )
+        return DecoratedCls
+    
+    
+    def __pre_init__(self):
+        pass
+    def __post_init__(self):
+        pass
