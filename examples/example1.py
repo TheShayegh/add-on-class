@@ -1,4 +1,4 @@
-from abstract_object_decorator import AOD
+from abstract_additive_class import AAD
 
 class Parent:
     def __init__(self):
@@ -16,17 +16,17 @@ class Child(Parent):
     def child_functionality(self):
         return 20
 
-class FirstDecorator(AOD):
+class FirstAdditive(AAD):
     def __post_init__(self):
-        self.first_decorator_property = 3
+        self.first_added_property = 3
     
-    def first_decorator_functionality(self):
+    def first_added_functionality(self):
         return 30
 
     def child_functionality(self):
         return self.__core.child_functionality(self)*2
 
-class SecondDecorator(AOD):
+class SecondAdditive(AAD):
     def __pre_init__(self, pre):
         self.pre = pre
 
@@ -38,22 +38,22 @@ class SecondDecorator(AOD):
         return self.__core.child_functionality(self)*3
 
 
-decorated = SecondDecorator(FirstDecorator(Child))(pre=4, post=8)
-print(decorated.parrent_property)
+added = SecondAdditive(FirstAdditive(Child))(pre=4, post=8)
+print(added.parrent_property)
 # >>> 67
-print(decorated.child_property)
+print(added.child_property)
 # >>> 12
-print(decorated.first_decorator_property)
+print(added.first_added_property)
 # >>> 3
-print(decorated.parent_functionality())
+print(added.parent_functionality())
 # >>> 10
-print(decorated.child_functionality())
+print(added.child_functionality())
 # >>> 120
-print(decorated.first_decorator_functionality())
+print(added.first_added_functionality())
 # >>> 30
-print(issubclass(type(decorated), Parent))
+print(issubclass(type(added), Parent))
 # >>> True
-print(decorated.pre)
+print(added.pre)
 # >>> 4
-print(decorated.post)
+print(added.post)
 # >>> 8

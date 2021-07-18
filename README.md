@@ -1,10 +1,10 @@
-# Abstract Object Decorator Package
+# Abstract Additive Class Package
 
-With the help of this module, you can implement decorators careless about things you don't want to change.
+This package provides you with a module that allows you to easily define classes that are stacked on top of each other and add features to each other, creating a whole new class.
 You can see an example of this application below.
 
 ```python
-from abstract_object_decorator import AOD
+from abstract_additive_class import AAD
 
 class Parent:
     def __init__(self):
@@ -22,17 +22,17 @@ class Child(Parent):
     def child_functionality(self):
         return 20
 
-class FirstDecorator(AOD):
+class FirstAdditive(AAD):
     def __post_init__(self):
-        self.first_decorator_property = 3
+        self.first_added_property = 3
     
-    def first_decorator_functionality(self):
+    def first_added_functionality(self):
         return 30
 
     def child_functionality(self):
         return self.__core.child_functionality(self)*2
 
-class SecondDecorator(AOD):
+class SecondAdditive(AAD):
     def __pre_init__(self, pre):
         self.pre = pre
 
@@ -44,39 +44,35 @@ class SecondDecorator(AOD):
         return self.__core.child_functionality(self)*3
 
 
-decorated = SecondDecorator(FirstDecorator(Child))(pre=4, post=8)
-print(decorated.parrent_property)
+added = SecondAdditive(FirstAdditive(Child))(pre=4, post=8)
+print(added.parrent_property)
 # >>> 67
-print(decorated.child_property)
+print(added.child_property)
 # >>> 12
-print(decorated.first_decorator_property)
+print(added.first_added_property)
 # >>> 3
-print(decorated.parent_functionality())
+print(added.parent_functionality())
 # >>> 10
-print(decorated.child_functionality())
+print(added.child_functionality())
 # >>> 120
-print(decorated.first_decorator_functionality())
+print(added.first_added_functionality())
 # >>> 30
-print(issubclass(type(decorated), Parent))
+print(issubclass(type(added), Parent))
 # >>> True
-print(decorated.pre)
+print(added.pre)
 # >>> 4
-print(decorated.post)
+print(added.post)
 # >>> 8
 ```
 
-NOTE: 
+* The output of the AAD constructor is a class itself and you need to get an instance from it again.
+* Based on order of calling additive classes and acording to `__pre_init__` and `__post_init__` functions, overrides occur. Use this logic to customize what you need.
+* Use `self.__core` to access the added class directly. It's useful when you need to call a function of added class that is overridden by the additive one. (See the example above)
 
-* ALWAYS put `AOD` as the first base class.
-* ALWAYS call `AOD.__init__` as the first line of class initializer.
-* NEVER call any other base class initializer.
-* Use `self.obj` to access the core object of the decorator.
-* EVERY getter or setter will be redirected to the object.
-
-Another example is here:
+Another example is here. Note the type of `E(D(B))`. It is `BCoveredByDCoveredByE` and is a subclass of `B`:
 
 ```python
-from abstract_object_decorator import AOD
+from abstract_additive_class import AAD
 
 class A:
     def __init__(self):
@@ -95,14 +91,14 @@ class B(A):
     def function(self):
         return "(B.function->B.function.end)"
     
-class D(AOD):
+class D(AAD):
     def __post_init__(self):
         self.new_attr = 2
         
     def function(self):
         return "(D.function->"+self.__core.function(self)+"->D.function.end)"
 
-class E(AOD):
+class E(AAD):
     def __pre_init__(self):
         self.new_attr = 3
         
@@ -117,8 +113,8 @@ print(e.new_attr)
 print(issubclass(type(e), B))
 # >>> True
 print(E(D(B)).__name__)
-# >>> BDecoratedByDDecoratedByE
+# >>> BCoveredByDCoveredByE
 ```
 
 ## Installation
-```pip install abstract-object-decorator```
+```pip install abstract-additive-class```

@@ -1,5 +1,5 @@
 import unittest
-from abstract_object_decorator import AOD
+from abstract_additive_class import AAD
 
 class A:
     def __init__(self):
@@ -18,14 +18,14 @@ class B(A):
     def function(self):
         return "(B.function->B.function.end)"
     
-class D(AOD):
+class D(AAD):
     def __post_init__(self):
         self.new_attr = 2
         
     def function(self):
         return "(D.function->"+self.__core.function(self)+"->D.function.end)"
 
-class E(AOD):
+class E(AAD):
     def __pre_init__(self):
         self.new_attr = 3
         
@@ -39,10 +39,10 @@ class Test(unittest.TestCase):
         self.assertAlmostEqual(e.new_attr, 2)
 
     def test_subclass(self):
-        self.assertAlmostEqual(issubclass(type(D(B)()), B), True)
+        self.assertAlmostEqual(issubclass(type(e), B), True)
 
     def test_cls_name(self):
-        self.assertAlmostEqual(E(D(B)).__name__, "BDecoratedByDDecoratedByE")
+        self.assertAlmostEqual(E(D(B)).__name__, "BCoveredByDCoveredByE")
 
     def test_oreder(self):
         self.assertAlmostEqual(e.main(),

@@ -1,8 +1,8 @@
 import inspect
 
-class AOD:
+class AAD:
     def __new__(decore_cls, core_cls):
-        name = core_cls.__name__+"DecoratedBy"+decore_cls.__name__
+        name = core_cls.__name__+"CoveredBy"+decore_cls.__name__
         
         def init(self, *args, **kwargs):
             pre_init_needs = inspect.signature(decore_cls.__pre_init__).parameters
@@ -25,12 +25,12 @@ class AOD:
         members = dict(decore_cls.__dict__)
         members['__init__'] = init
 
-        DecoratedCls = type(
+        CoveredCls = type(
             name,
             (core_cls,),
             members
         )
-        return DecoratedCls
+        return CoveredCls
     
     
     def __pre_init__(self):
