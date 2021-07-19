@@ -1,5 +1,5 @@
 import unittest
-from abstract_additive_class import AAD
+from add_on_class import AOC
 
 class A:
     def __init__(self):
@@ -18,14 +18,14 @@ class B(A):
     def function(self):
         return "(B.function->B.function.end)"
     
-class D(AAD):
+class D(AOC):
     def __post_init__(self):
         self.new_attr = 2
         
     def function(self):
         return "(D.function->"+self.__core.function(self)+"->D.function.end)"
 
-class E(AAD):
+class E(AOC):
     def __pre_init__(self):
         self.new_attr = 3
         

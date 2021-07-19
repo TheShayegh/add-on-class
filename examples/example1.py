@@ -1,4 +1,4 @@
-from abstract_additive_class import AAD
+from add_on_class import AOC
 
 class Parent:
     def __init__(self):
@@ -16,7 +16,7 @@ class Child(Parent):
     def child_functionality(self):
         return 20
 
-class FirstAdditive(AAD):
+class FirstAddOn(AOC):
     def __post_init__(self):
         self.first_added_property = 3
     
@@ -26,7 +26,7 @@ class FirstAdditive(AAD):
     def child_functionality(self):
         return self.__core.child_functionality(self)*2
 
-class SecondAdditive(AAD):
+class SecondAddOn(AOC):
     def __pre_init__(self, pre):
         self.pre = pre
 
@@ -38,7 +38,7 @@ class SecondAdditive(AAD):
         return self.__core.child_functionality(self)*3
 
 
-added = SecondAdditive(FirstAdditive(Child))(pre=4, post=8)
+added = SecondAddOn(FirstAddOn(Child))(pre=4, post=8)
 print(added.parrent_property)
 # >>> 67
 print(added.child_property)

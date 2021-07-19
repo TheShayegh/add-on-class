@@ -35,7 +35,7 @@ def generate_init_string(decore_cls, core_cls):
 
     for need in all_needs:
         if str(all_needs[need].kind) in ['VAR_KEYWORD','VAR_POSITIONAL']:
-            raise Exception("AAD can not be added to a function that receives *args or **kwargs as initialization input.")
+            raise Exception("AOC can not be added to a function that receives *args or **kwargs as initialization input.")
 
     def input_args_to_string(args):
         phrases = []
@@ -63,7 +63,7 @@ def generate_init_string(decore_cls, core_cls):
 
 
 
-class AAD:
+class AOC:
     def __new__(decore_cls, core_cls):
         name = core_cls.__name__+"CoveredBy"+decore_cls.__name__
         

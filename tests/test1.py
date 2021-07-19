@@ -1,5 +1,5 @@
 import unittest
-from abstract_additive_class import AAD
+from add_on_class import AOC
 
 class A:
     def __init__(self):
@@ -30,7 +30,7 @@ class C(B):
     def func(self):
         return super().func()-10
 
-class Decorator1(AAD):
+class Decorator1(AOC):
     def __post_init__(self):
         self.d = 72
         self.x = 96
@@ -41,7 +41,7 @@ class Decorator1(AAD):
     def new_func(self):
         return "new function"
 
-class Decorator2(AAD):
+class Decorator2(AOC):
     def second_func(self):
         return 100
 
