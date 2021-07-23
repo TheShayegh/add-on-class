@@ -65,6 +65,7 @@ def generate_init_string(decore_cls, core_cls):
 
 class AOC:
     def __new__(decore_cls, core_cls):
+        decore_cls.__check_core_type__(core_cls)
         name = core_cls.__name__+"CoveredBy"+decore_cls.__name__
         
         fake_scope = {'decore_cls':decore_cls, 'core_cls':core_cls}
@@ -80,9 +81,34 @@ class AOC:
             members
         )
         return CoveredCls
-    
-    
+
+    @classmethod
+    def __check_core_type__(decore_cls, core_cls):
+        pass
+
     def __pre_init__(self):
         pass
     def __post_init__(self):
         pass
+
+
+
+def covering_around(classes):
+    if not isinstance(classes, list):
+        raise Exception(f"Input of `covering_around` should be a list but got {type(classes)}")
+    
+    def covering_around_decorator(add_on_class):
+        if not issubclass(add_on_class, AOC):
+            raise Exception(f"Target class for `covering_around` decorator should be an AOC or AOC subclass but got {add_on_class.__name__}.")
+        
+        def __check_core_type__(core_cls):
+            for each_class in classes:
+                if issubclass(core_cls, each_class):
+                    break
+            else:
+                raise Exception(f"Ivalid core type {core_cls.__name__} for add-on {add_on_class.__name__}. Expected one of: {', '.join([each_class.__name__ for each_class in classes])} or one of their childs.")
+
+        add_on_class.__check_core_type__ = __check_core_type__
+        return add_on_class
+
+    return covering_around_decorator
