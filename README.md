@@ -117,7 +117,7 @@ print(E(D(B)).__name__)
 
 * NOTE: We can not add AOC to a class that receives "*args" or "**kwargs" as initialization input.
 
-A class decorator (`covering_around`) is also available to limit the core class type. See the example bellow:
+A class decorator (`covering_around`) is also available to limit the core class type. See the example below:
 
 ```python
 from add_on_class import AOC, covering_around
