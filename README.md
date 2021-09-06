@@ -1,7 +1,6 @@
 # Add-On Class Package
 
-This package provides you with a module that allows you to easily define classes that are stacked on top of each other and add features to each other, creating a whole new class.
-You can see an example of this application below.
+This package provides you with a module that allows you to easily define classes stacked on top of each other and add features to each other, creating a whole new class. You can see an example of this application below.
 
 ```python
 from add_on_class import AOC
@@ -65,9 +64,9 @@ print(added.post)
 # >>> 8
 ```
 
-* The output of the AOC constructor is a class itself and you need to get an instance from it again.
-* Based on order of calling add-on classes and acording to `__pre_init__` and `__post_init__` functions, overrides occur. Use this logic to customize what you need.
-* Use `self.__core` to access the added class directly. It's useful when you need to call a function of core class that is overridden by the add-on one. (See the example above)
+* The output of the AOC constructor is a class itself, so you need to get an instance from it again.
+* Based on order of calling add-on classes and according to `__pre_init__` and `__post_init__` functions, overrides occur. Use this logic to customize what you need.
+* Use `self.__core` to access the inner class directly. It's helpful to call a core class function overridden by the add-on one (See the example above).
 
 Another example is here. Note the type of `E(D(B))`. It is `BCoveredByDCoveredByE` and is a subclass of `B`:
 
@@ -116,9 +115,9 @@ print(E(D(B)).__name__)
 # >>> BCoveredByDCoveredByE
 ```
 
-* NOTE: AOC can not be added to a class that receives *args or **kwargs as initialization input.
+* NOTE: We can not add AOC to a class that receives "*args" or "**kwargs" as initialization input.
 
-A class decorator (`covering_around`) is also available to limit the core class type. See example bellow:
+A class decorator (`covering_around`) is also available to limit the core class type. See the example bellow:
 
 ```python
 from add_on_class import AOC, covering_around
